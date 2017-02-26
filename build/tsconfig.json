@@ -7,10 +7,12 @@
     "noImplicitAny": false,
     "removeComments": false,
     "noEmitOnError": false,
+    "moduleResolution":"node",
     "target": "es5",
     "lib": [ "es2015","dom"],
     "experimentalDecorators": true,
-    "inlineSourceMap": false
+    "inlineSourceMap": true,
+    "types":["node"]
   },
   "exclude": [
     "node_modules"

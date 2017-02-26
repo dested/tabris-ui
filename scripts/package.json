@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tabris": "^1.10.0"
+    "tabris": "^1.10.0",
+    "typescript": "^2.2.1",
+    "vue-ts-loader": "0.0.3"
   }
 }

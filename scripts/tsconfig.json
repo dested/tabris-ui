@@ -10,8 +10,10 @@
     "target": "es5",
     "experimentalDecorators": true,
     "inlineSourceMap": false,
-    "outDir": "../www/scripts/"
+    "outDir": "../www/scripts/",
+    "types": ["vue-typescript-import-dts"]
   },
   "exclude": [
+    "node_modules"
   ]
 }
