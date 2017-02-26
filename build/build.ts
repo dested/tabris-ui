@@ -22,17 +22,15 @@ export default class Build {
         let script = window.$('script').html();
 
         let templateJson = <Element>JSON.parse(convert.xml2json(template, {compact: false, spaces: 4}));
-        let templateJS = this.buildUIFromTemplate(templateJson.elements[0]);
+        let templateJS = this.buildUIFromTemplate(templateJson.elements[0], null);
 
-        var jsFile = ts.transpile(script, JSON.parse(tsconfig)).replace(/\"use strict\";/g,"");
+        var jsFile = ts.transpile(script, JSON.parse(tsconfig)).replace(/\"use strict\";/g, "");
 
 
         jsFile += `default_1.prototype.render=function(){with(this){${templateJS.code}return ${templateJS.variable};}}`;
 
-/*
-        var toplevel_ast = uglifyJS.parse(jsFile, {strict:false});
+        var toplevel_ast = uglifyJS.parse(jsFile, {strict: false});
         jsFile = toplevel_ast.print_to_string({beautify: true});
-*/
 
 
         var writeResult = await awaiter(fs.writeFile, "../www/scripts/" + file, jsFile);
@@ -46,22 +44,46 @@ export default class Build {
     }
 
 
-    static buildUIFromTemplate(element: Element): { variable: string, code: string } {
+    static buildUIFromTemplate(element: Element, parentVariable: string): { variable: string, code: string } {
         var code = '';
 
-        var variable = this.variableName(element.name);
-        code += `var ${variable} = new tabris.${element.name}(${this.getOptions(element.attributes)});` + this.newLine;
+        var isConsole = element.name === 'Console';
+
+        var isEmpty = isConsole || element.name === 'Empty';
+
+        var variable = !isEmpty ? this.variableName(element.name) : parentVariable;
+        let closeBottom = 0;
+        if (element.attributes["v-for"]) {
+            code += `for(let ${element.attributes["v-for"]}){` + this.newLine;
+            closeBottom++;
+        }
+        if (element.attributes["v-if"]) {
+            code += `if(${element.attributes["v-if"]}){` + this.newLine;
+            closeBottom++;
+        }
+
+        if(isConsole){
+            code+=`console.log(${element.attributes[":log"]})`;
+        }
+        if (!isEmpty) {
+            //todo support more than just tabris elements
+            code += `var ${variable} = new tabris.${element.name}(${this.getOptions(element.attributes)});` + this.newLine;
+        }
         if (element.elements) {
             for (let childElement of element.elements) {
-                //todo support our components
-                //need to determine if the key is in the list of tabris elements
-                //if not try to require the component somehow
-                var result = this.buildUIFromTemplate(childElement);
+                let result = this.buildUIFromTemplate(childElement, variable);
 
                 code += result.code + this.newLine;
-                code += `${result.variable}.appendTo(${variable});` + this.newLine;
+
             }
         }
+        if (!isEmpty && parentVariable)
+            code += `${parentVariable}.append(${variable});` + this.newLine;
+
+        for (let i = 0; i < closeBottom; i++) {
+            code += "}" + this.newLine;
+        }
+
 
         return {variable, code};
 
@@ -135,26 +157,26 @@ export default class Build {
         return sobj;
     }
 
-  /*  static fixVariableForThis(val: string) {
+    /*  static fixVariableForThis(val: string) {
 
 
-        var ast = uglifyJS.parse(val, {});
+     var ast = uglifyJS.parse(val, {});
 
 
-        var ast2 = ast.transform(new uglifyJS.TreeTransformer(function (node, descend) {
-            if (node instanceof uglifyJS.AST_SymbolRef) {
-                console.log(node.name);
-                node = node.clone();
-            }
+     var ast2 = ast.transform(new uglifyJS.TreeTransformer(function (node, descend) {
+     if (node instanceof uglifyJS.AST_SymbolRef) {
+     console.log(node.name);
+     node = node.clone();
+     }
 
-            descend(node, this);
-            return node;
-        }));
+     descend(node, this);
+     return node;
+     }));
 
-console.log(ast2.print_to_string({beautify: true}));
-        return ast2.print_to_string({beautify: true});
+     console.log(ast2.print_to_string({beautify: true}));
+     return ast2.print_to_string({beautify: true});
 
-    }*/
+     }*/
 }
 
 

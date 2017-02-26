@@ -4,13 +4,24 @@
         <ActivityIndicator top="prev() 20" centerX="0" width="48" height="48"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" width="48" height="48"></ActivityIndicator>
         <Composite top="prev() 50" bottom="50">
-            <TextView v-for="item in [20,40,60]"
-                      :top="`prev() `+item"
-                      textColor="silver"
-                      font="bold 8px"
-                      alignment="center"
-                      :text="'Version '+version">
-            </TextView>
+            <Empty v-for="item of [20,40,60]">
+                <Console :log="item"></Console>
+                <TextView v-if="item >=40"
+                          :top="`prev() `+item"
+                          centerX="0"
+                          textColor="silver"
+                          font="bold 8px"
+                          alignment="center"
+                          :text="'Version '+version">
+                </TextView>
+                <TextView :top="`prev() `+item"
+                          centerX="0"
+                          textColor="silver"
+                          font="bold 8px"
+                          alignment="center"
+                          :text="'Version '+version">
+                </TextView>
+            </Empty>
         </Composite>
         <ActivityIndicator top="prev() 20" centerX="0" width="48" height="48"></ActivityIndicator>
     </Page>
