@@ -12,7 +12,8 @@
     "lib": [ "es2015","dom"],
     "experimentalDecorators": true,
     "inlineSourceMap": true,
-    "types":["node"]
+    "types":["node"],
+    "noImplicitUseStrict": true
   },
   "exclude": [
     "node_modules"

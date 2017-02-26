@@ -14,6 +14,7 @@
     "jsdom": "^9.11.0",
     "through2": "^2.0.3",
     "typescript": "^2.2.1",
+    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
     "xml-js": "^1.0.2",
     "xml2js": "^0.4.17"
   }

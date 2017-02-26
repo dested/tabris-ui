@@ -1,18 +1,18 @@
 ﻿<template>
 
     <Page topLevel="true" id="LoadingPage">
-        <ActivityIndicator layoutData.top="prev() 20" layoutData.centerX="0" layoutData.width="48" layoutData.height="48"></ActivityIndicator>
-        <ActivityIndicator layoutData.top="prev() 20" layoutData.centerX="0" layoutData.width="48" layoutData.height="48"></ActivityIndicator>
-        <Composite layoutData.top="prev() 50" layoutData.bottom="50">
+        <ActivityIndicator top="prev() 20" centerX="0" width="48" height="48"></ActivityIndicator>
+        <ActivityIndicator top="prev() 20" centerX="0" width="48" height="48"></ActivityIndicator>
+        <Composite top="prev() 50" bottom="50">
             <TextView v-for="item in [20,40,60]"
-                      :layoutData.top="`prev() `+item"
+                      :top="`prev() `+item"
                       textColor="silver"
                       font="bold 8px"
                       alignment="center"
                       :text="'Version '+version">
             </TextView>
         </Composite>
-        <ActivityIndicator layoutData.top="prev() 20" layoutData.centerX="0" layoutData.width="48" layoutData.height="48"></ActivityIndicator>
+        <ActivityIndicator top="prev() 20" centerX="0" width="48" height="48"></ActivityIndicator>
     </Page>
 
 </template>
@@ -23,7 +23,7 @@
     import {Page} from "./tabris-ui/page";
 
     export default class extends Page {
-        version: number = <number>'foo';
+        version: number = 12;
 
         onLoad() {
 

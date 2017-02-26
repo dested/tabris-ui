@@ -11,7 +11,8 @@
     "experimentalDecorators": true,
     "inlineSourceMap": false,
     "outDir": "../www/scripts/",
-    "types": ["vue-typescript-import-dts"]
+    "types": ["vue-typescript-import-dts"],
+    "noImplicitUseStrict": true
   },
   "exclude": [
     "node_modules"

@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as jsdom from "jsdom";
 import * as convert from "xml-js";
 import * as ts from "typescript";
+import * as uglifyJS from "uglify-js";
 
 
 export default class Build {
@@ -23,11 +24,16 @@ export default class Build {
         let templateJson = <Element>JSON.parse(convert.xml2json(template, {compact: false, spaces: 4}));
         let templateJS = this.buildUIFromTemplate(templateJson.elements[0]);
 
+        var jsFile = ts.transpile(script, JSON.parse(tsconfig)).replace(/\"use strict\";/g,"");
 
-        var jsFile = ts.transpile(script, JSON.parse(tsconfig));
 
+        jsFile += `default_1.prototype.render=function(){with(this){${templateJS.code}return ${templateJS.variable};}}`;
 
-        jsFile += `default_1.prototype.render=function(){${templateJS.code} return ${templateJS.variable};}`;
+/*
+        var toplevel_ast = uglifyJS.parse(jsFile, {strict:false});
+        jsFile = toplevel_ast.print_to_string({beautify: true});
+*/
+
 
         var writeResult = await awaiter(fs.writeFile, "../www/scripts/" + file, jsFile);
 
@@ -44,7 +50,7 @@ export default class Build {
         var code = '';
 
         var variable = this.variableName(element.name);
-        code += `var ${variable} = new tabris.${element.name}(${this.getOptions(element.attributes)});`;
+        code += `var ${variable} = new tabris.${element.name}(${this.getOptions(element.attributes)});` + this.newLine;
         if (element.elements) {
             for (let childElement of element.elements) {
                 //todo support our components
@@ -52,8 +58,8 @@ export default class Build {
                 //if not try to require the component somehow
                 var result = this.buildUIFromTemplate(childElement);
 
-                code += result.code;
-                code += `${result.variable}.appendTo(${variable});`;
+                code += result.code + this.newLine;
+                code += `${result.variable}.appendTo(${variable});` + this.newLine;
             }
         }
 
@@ -68,21 +74,20 @@ export default class Build {
             let locKey = key;
             if (key.indexOf('.') >= 0) {
                 let locKeys = key.replace(':', '').split('.');
-                for (let l = 0; l < locKeys.length-1; l++) {
+                for (let l = 0; l < locKeys.length - 1; l++) {
                     locKey = locKeys[l];
                     if (!curResult[locKey]) {
                         curResult[locKey] = {};
                     }
                     curResult = curResult[locKey];
                 }
-                locKey = locKeys[locKeys.length-1];
+                locKey = locKeys[locKeys.length - 1];
             }
 
 
             if (locKey[0] === ':') {
-
+                curResult[locKey] = options[key];
             } else if (locKey[0] === 'v' && locKey[1] === '-') {
-
             } else {
                 var float = parseFloat(options[key]);
                 if (!isNaN(float)) {
@@ -100,8 +105,56 @@ export default class Build {
                 curResult[locKey] = options[key];
             }
         }
-        return JSON.stringify(result);
+        return this.stringify(result);
     }
+
+    static newLine: string = '\r\n';
+
+    static stringify(obj: any) {
+        var sobj = '{';
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                var val = obj[key];
+
+                if (key.indexOf(":") === 0) {
+                    key = key.replace(':', '');
+                    sobj += key + ":" + val + "," + this.newLine;
+                } else if (Array.isArray(val)) {
+                    sobj += key + ":[" + val.map((e) => this.stringify(e)).join(',') + "]," + this.newLine;
+                } else if (typeof(val) === 'object') {
+                    sobj += key + ":" + this.stringify(val) + "," + this.newLine;
+                } else if (typeof(val) === 'string') {
+                    sobj += key + ":\"" + val + "\"," + this.newLine;
+                } else {
+                    sobj += key + ":" + val + "," + this.newLine;
+                }
+            }
+        }
+
+        sobj += "}";
+        return sobj;
+    }
+
+  /*  static fixVariableForThis(val: string) {
+
+
+        var ast = uglifyJS.parse(val, {});
+
+
+        var ast2 = ast.transform(new uglifyJS.TreeTransformer(function (node, descend) {
+            if (node instanceof uglifyJS.AST_SymbolRef) {
+                console.log(node.name);
+                node = node.clone();
+            }
+
+            descend(node, this);
+            return node;
+        }));
+
+console.log(ast2.print_to_string({beautify: true}));
+        return ast2.print_to_string({beautify: true});
+
+    }*/
 }
 
 
