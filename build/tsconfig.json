@@ -1,0 +1,18 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "allowJs": false,
+    "allowUnreachableCode": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noEmitOnError": false,
+    "target": "es5",
+    "lib": [ "es2015","dom"],
+    "experimentalDecorators": true,
+    "inlineSourceMap": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
