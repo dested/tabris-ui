@@ -1,6 +1,6 @@
 ﻿<template>
 
-    <Page topLevel="true" id="LoadingPage">
+    <Page topLevel="true" id="LoadingPage" title="loading">
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ScrollView top="prev() 50" bottom="50" left="0" right="0">
@@ -43,6 +43,7 @@
 
     import {Page} from "./tabris-ui/page";
     import {PageManager} from "./tabris-ui/pageManager";
+    import OtherPage from "./OtherPage.vue";
 
     export default class extends Page {
 
@@ -59,9 +60,13 @@
 
 
         onLoad() {
-            setInterval(() => {
+            var cl=setInterval(() => {
                 this.version += (Math.random() * 20) | 0;
-            }, 2000)
+                if(this.version>80){
+                  clearInterval(cl);
+                  PageManager.loadPage(new OtherPage());
+                }
+            }, 500)
         }
 
         onComponentCreated() {
