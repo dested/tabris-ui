@@ -19,16 +19,16 @@ export abstract class Page {
 export class Builder {
     static create(key: string, parm1: any, parm2: any): ElementResult {
         let result = null;
-        let children: ElementResult[]
-    :
-        [];
+        let children: ElementResult[]    :        [];
         var attributes = {};
+        var on = {};
 
         if (Array.isArray(parm1)) {
             children = parm1;
         }
         else {
             attributes = parm1.attrs;
+            ons = parm1.on;
             children = parm2;
         }
 
@@ -55,6 +55,17 @@ export class Builder {
                 }
                 console.log(`creating ${key} ${JSON.stringify(attributes)}`)
                 var elem = new tabris[key](attributes);
+
+
+                for (let on in ons) {
+                    let callback=ons[on];
+                    elem.on(on,()=>{
+                        callback();
+                    })
+                }
+
+
+
                 if (children) {
                     for (let child of children) {
                         if (child) {

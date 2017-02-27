@@ -8,10 +8,11 @@
                 <Console :log="item"></Console>
                 <TextView v-if="item >=40"
                           centerX="0"
-                          textColor="silver"
-                          font="bold 8px"
+                          textColor="red"
+                          font="bold 15px"
                           alignment="center"
-                          :text="'Version '+version+' '+item">
+                          :text="'Version '+version+' '+item"
+                            @tap="tapit(item)">
                 </TextView>
             </Composite>
         </ScrollView>
@@ -42,6 +43,9 @@
 
         onResize() {
             tabris.ui.set("toolbarVisible", false);
+        }
+        tapit(ind:number) {
+            console.log('tapped ' +ind);
         }
     }
 
