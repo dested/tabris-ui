@@ -4,14 +4,15 @@
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ScrollView top="prev() 50" bottom="50" left="0" right="0">
-            <Composite v-for="item of [20,40,60,100,120,140,190]" :top="`prev() `+item" v-if="item >=40"  @tap="tapit(item)">
+            <Composite v-for="item of [20,40,60,100,120,140,190]" :top="`prev() `+item" v-if="item >=40"
+                       @tap="tapit(item)">
                 <TextView
                         centerX="0"
                         textColor="red"
                         font="bold 15px"
                         alignment="center"
                         :text="'Version '+version+' '+item"
-                       >
+                >
                 </TextView>
                 <TextView v-if="version >30 & version<60"
                           centerX="0"
@@ -20,7 +21,7 @@
                           font="bold 15px"
                           alignment="center"
                           text="this works"
-                          >
+                >
                 </TextView>
                 <TextView
                         centerX="0"
@@ -29,7 +30,7 @@
                         font="bold 15px"
                         alignment="center"
                         text="get it right get it tight"
-                       >
+                >
                 </TextView>
             </Composite>
         </ScrollView>
@@ -41,12 +42,26 @@
 <script lang="ts">
 
     import {Page} from "./tabris-ui/page";
+    import {PageManager} from "./tabris-ui/pageManager";
 
     export default class extends Page {
-        version: number = 12;
+
+        _version: number = 12;
+
+        get version(): number {
+            return this._version;
+        };
+
+        set version(value: number) {
+            this._version = value
+            PageManager.renderPage(this);
+        };
+
 
         onLoad() {
-
+            setInterval(() => {
+                this.version += (Math.random() * 20) | 0;
+            }, 2000)
         }
 
         onComponentCreated() {
