@@ -18,18 +18,8 @@
 
     export default class extends Page {
 
-        _height: number = 30;
+        drawHeight: number = 30;
         ci = null;
-
-        get drawHeight(): number {
-            return this._height;
-        };
-
-        set drawHeight(value: number) {
-            this._height = value;
-            PageManager.renderPage(this);
-        };
-
 
         onLoad() {
             this.ci = setInterval(() => {
