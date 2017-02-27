@@ -18,12 +18,6 @@ export abstract class Page {
 }
 
 export class Builder {
-    static varCounter = 0;
-
-    static variableName(key: string): string {
-        return key + "" + (this.varCounter++);
-    }
-
 
     static create(key: string, parm1: any, parm2: any): ElementResult {
         let result = new ElementResult();
@@ -46,7 +40,7 @@ export class Builder {
                 result.commands.push(new ScreenCommand(CommandType.ConsoleLog, {value: attributes["log"]}));
                 break;
             default:
-                let widgetId = Builder.variableName(key);
+                let widgetId = attributes["id"];
                 result.commands.push(new ScreenCommand(CommandType.CreateWidget, {
                     key: key,
                     widgetId: widgetId
@@ -89,6 +83,26 @@ export class Builder {
                 if (childrenCommands) {
                     for (let childCommand of childrenCommands) {
                         if (childCommand) {
+
+
+                            for (let j = 0; j < childCommand.commands.length; j++) {
+                                let c = childCommand.commands[j];
+                                if (c.options.widgetId === childCommand.widgetId) {
+                                    c.options.widgetId = result.widgetId + "_child_" + childCommand.widgetId;
+                                }
+
+
+                                if (c.options.key === childCommand.widgetId) {
+                                    c.options.key = result.widgetId + "_child_" + childCommand.widgetId;
+                                }
+
+
+                            }
+
+
+                            childCommand.widgetId = result.widgetId + "_child_" + childCommand.widgetId;
+
+
                             result.commands.push(...childCommand.commands);
                             if (childCommand.widgetId) {
                                 result.commands.push(new ScreenCommand(CommandType.AppendWidget, {
@@ -117,7 +131,27 @@ export class Builder {
         let results: ElementResult[] = [];
         for (let i = 0; i < values.length; i++) {
             let val = values[i];
-            results.push(callback(val))
+            let result = callback(val);
+            if (result) {
+
+                var oldWidgetId=result.widgetId;
+                var newWidgetId=result.widgetId+"_ind_" + val;
+
+                for (let j = 0; j < result.commands.length; j++) {
+                    let c = result.commands[j];
+                    if (c.options.widgetId .indexOf(oldWidgetId)===0) {
+                        c.options.widgetId = c.options.widgetId.replace(oldWidgetId,newWidgetId);
+                    }
+
+                    if (c.options.key .indexOf(oldWidgetId)===0) {
+                        c.options.key = c.options.key.replace(oldWidgetId,newWidgetId);
+                    }
+                }
+
+                result.widgetId = newWidgetId;
+            }
+            results.push(result)
+
         }
         return results;
     }

@@ -18,11 +18,22 @@ export class Widget {
     }
 
     appendTo(composite: Composite) {
+        if(!composite){
+            throw ('cannot append to null widget')
+        }
         composite.append(this);
     }
+    insertAfter(widget: Widget) {
+        if(!widget){
+            throw ('cannot insert after null widget')
+        }
+        // this.children.push(widget);
+    }
+
     isDisposed() {
         return false;
     }
+
     dispose() {
     }
 
@@ -45,16 +56,14 @@ export class Composite extends Widget {
     children: Widget[] = [];
 
     append(widget: Widget) {
+        if(!widget){
+            throw ('cannot append null widget')
+        }
+
         this.children.push(widget);
     }
 
-    debug(indent: number) {
-        super.debug(indent);
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
-            child.debug(indent + 1);
-        }
-    }
+
 }
 export class ActivityIndicator extends Widget {
     constructor(options: any) {

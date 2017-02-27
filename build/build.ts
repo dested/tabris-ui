@@ -1,9 +1,8 @@
 import * as fs from "fs";
 import * as jsdom from "jsdom";
-import * as convert from "xml-js";
 import * as ts from "typescript";
 import * as uglifyJS from "uglify-js";
-import * as  compiler from 'vue-template-compiler';
+import * as  compiler from './vueTemplateCompiler';
 
 
 export default class Build {
@@ -20,6 +19,7 @@ export default class Build {
         let txt = component.match(new RegExp(`<template>((.|[\r\n])*)<\/template>`))
         let template = txt[1];
 
+
         let script = window.$('script').html();
 
         var jsFile = ts.transpile(script, JSON.parse(tsconfig)).replace(/\"use strict\";/g, "");
@@ -29,7 +29,14 @@ export default class Build {
         // let templateJS = this.buildUIFromTemplate(templateJson.elements[0], null);
         // jsFile += `default_1.prototype.render=function(){with(this){${templateJS.code}return ${templateJS.variable};}}`;
         let templateJS =compiler.compile(template, {}).render;
-        jsFile += `default_1.prototype.render=function(){page_1.Builder.varCounter=0;var _c=page_1.Builder.create;var _e=page_1.Builder.empty;var _l=page_1.Builder.loop;var _v=page_1.Builder.space;${templateJS}}`;
+        jsFile += `
+        default_1.prototype.render=function(){
+            var _c=page_1.Builder.create;
+            var _e=page_1.Builder.empty;
+            var _l=page_1.Builder.loop;
+            var _v=page_1.Builder.space;
+            ${templateJS}
+        }`;
 
 
 

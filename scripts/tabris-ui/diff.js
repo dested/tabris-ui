@@ -352,10 +352,11 @@
                 },
                 /*istanbul ignore start*/ /*istanbul ignore end*/
                 equals: function equals(left, right) {
-                    return left.commandType=== right.commandType &&
-                        left.options.key=== right.options.key &&
-                        (left.options.value=== right.options.value ||( typeof(left.options.value)=== typeof(right.options.value) && typeof(left.options.value)==='function')) &&
-                        left.options.widgetId=== right.options.widgetId;
+                    return left.commandType === right.commandType &&
+                        (left.options && right.options) &&
+                        left.options.key === right.options.key &&
+                        (left.options.value === right.options.value || (typeof (left.options.value) === typeof (right.options.value) && typeof (left.options.value) === 'function')) &&
+                        left.options.widgetId === right.options.widgetId;
                 },
                 /*istanbul ignore start*/ /*istanbul ignore end*/
                 removeEmpty: function removeEmpty(array) {
@@ -425,7 +426,7 @@
                 // Special case handle for when one terminal is ignored. For this case we merge the
                 // terminal into the prior string and drop the change.
                 var lastComponent = components[componentLen - 1];
-                if (componentLen > 1 && (lastComponent.added || lastComponent.removed) && diff.equals('', lastComponent.value)) {
+                if (componentLen > 1 && (lastComponent.added || lastComponent.removed) && diff.equals({options:{}}, lastComponent.value)) {
                     components[componentLen - 2].value += lastComponent.value;
                     components.pop();
                 }

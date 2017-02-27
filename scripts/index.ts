@@ -18,15 +18,16 @@ function removeCommand(command: ScreenCommand, index: number, commands: ScreenCo
         case CommandType.SetProperty:
             break;
         case CommandType.AddEvent:
-            console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value} ${command.options.widgetId} `);
+            console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value||''} ${command.options.widgetId} `);
             if (widgets[command.options.widgetId] && !widgets[command.options.widgetId].isDisposed()) {
                 widgets[command.options.widgetId].off(command.options.key, command.options.value);
             }
             break;
         case CommandType.AppendWidget:
-            console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value} ${command.options.widgetId} `);
+            console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value||''} ${command.options.widgetId} `);
             if (widgets[command.options.key] && !widgets[command.options.key].isDisposed()) {
                 widgets[command.options.key].dispose();
+                delete widgets[command.options.key];
             }
             break;
         case CommandType.ConsoleLog:
@@ -36,7 +37,7 @@ function removeCommand(command: ScreenCommand, index: number, commands: ScreenCo
 
 
 function addCommand(command: ScreenCommand, index: number, commands: ScreenCommand[]) {
-    console.log(`adding ${command.commandType} ${command.options.key} ${command.options.value} ${command.options.widgetId} `);
+    console.log(`adding ${command.commandType} ${command.options.key} ${command.options.value||''} ${command.options.widgetId} `);
     switch (command.commandType) {
         case CommandType.CreateWidget:
             let attrs = {};
@@ -61,7 +62,11 @@ function addCommand(command: ScreenCommand, index: number, commands: ScreenComma
             widgets[command.options.widgetId].on(command.options.key, command.options.value);
             break;
         case CommandType.AppendWidget:
-            widgets[command.options.widgetId].append(widgets[command.options.key]);
+            if(widgets[command.options.widgetId].lastModifiedWidget){
+                widgets[command.options.key].insertAfter(widgets[command.options.widgetId].lastModifiedWidget)
+            }else{
+                widgets[command.options.widgetId].append(widgets[command.options.key]);
+            }
             break;
         case CommandType.ConsoleLog:
             console.log(command.options.value);
@@ -73,7 +78,7 @@ let loadPage = (page) => {
 
 
     let diffArray = <{count: number, added: boolean, removed: boolean, value: ScreenCommand[]}[]>JsDiff.diffArrays(lastCommands, result.commands);
-
+    lastCommands = result.commands;
     for (let i = 0; i < diffArray.length; i++) {
         let diff = diffArray[i];
         if (diff.removed) {
@@ -82,11 +87,24 @@ let loadPage = (page) => {
                 removeCommand(command, j, diff.value);
             }
         }
-        if (diff.added) {
+        else if (diff.added) {
             for (let j = 0; j < diff.value.length; j++) {
                 let command = diff.value[j];
                 addCommand(command, j, diff.value);
             }
+        } else {
+            for (let j = 0; j < diff.value.length; j++) {
+                let command = diff.value[j];
+                switch (command.commandType) {
+                    case CommandType.CreateWidget:
+                        widgets[command.options.widgetId].lastModifiedWidget = null;
+                        break;
+                    case CommandType.AppendWidget:
+                        widgets[command.options.widgetId].lastModifiedWidget = widgets[command.options.key];
+                        break;
+                }
+            }
+
         }
 
     }
@@ -94,7 +112,6 @@ let loadPage = (page) => {
         tabrisPage.open();
     }
 
-    lastCommands = result.commands;
 
 
     setTimeout(() => {
