@@ -12,6 +12,9 @@ export class PageManager {
     static loadPage(page:Page) {
         page.onLoad();
         this.renderPage(page);
+        if (this.tabrisPage) {
+            this.tabrisPage.open();
+        }
     }
     public static renderPage(page:Page) {
         let result = <ElementResult>(<any>page).render();
@@ -47,9 +50,7 @@ export class PageManager {
             }
 
         }
-        if (this.tabrisPage) {
-            this.tabrisPage.open();
-        }
+
     }
 
 

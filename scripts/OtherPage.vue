@@ -4,7 +4,8 @@
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
-        <Composite background="red" top="prev() 20" left="0" right="0" :height="drawHeight"></Composite>
+        <Composite background="red" top="prev() 20" left="0" right="0" :height="drawHeight"
+                   @tap="loadOtherPage()"></Composite>
     </Page>
 
 </template>
@@ -13,29 +14,37 @@
 
     import {Page} from "./tabris-ui/page";
     import {PageManager} from "./tabris-ui/pageManager";
+    import TabFolderPage from "./TabFolderPage.vue";
 
     export default class extends Page {
 
         _height: number = 30;
+        ci = null;
 
         get drawHeight(): number {
             return this._height;
         };
 
         set drawHeight(value: number) {
-            this._height = value
+            this._height = value;
             PageManager.renderPage(this);
         };
 
 
         onLoad() {
-            setInterval(() => {
+            this.ci = setInterval(() => {
                 this.drawHeight += 1;
             }, 200)
         }
 
         onComponentCreated() {
 
+        }
+
+
+        loadOtherPage() {
+            clearInterval(this.ci);
+            PageManager.loadPage(new TabFolderPage());
         }
 
         onNavigateTo() {
@@ -45,9 +54,6 @@
         onResize() {
         }
 
-        tapit(ind: number) {
-            console.log('tapped ' + ind);
-        }
     }
 
 </script>
