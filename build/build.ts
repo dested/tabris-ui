@@ -3,6 +3,7 @@ import * as jsdom from "jsdom";
 import * as convert from "xml-js";
 import * as ts from "typescript";
 import * as uglifyJS from "uglify-js";
+import * as  compiler from 'vue-template-compiler';
 
 
 export default class Build {
@@ -21,17 +22,20 @@ export default class Build {
 
         let script = window.$('script').html();
 
-        let templateJson = <Element>JSON.parse(convert.xml2json(template, {compact: false, spaces: 4}));
-        let templateJS = this.buildUIFromTemplate(templateJson.elements[0], null);
-
         var jsFile = ts.transpile(script, JSON.parse(tsconfig)).replace(/\"use strict\";/g, "");
 
 
-        jsFile += `default_1.prototype.render=function(){with(this){${templateJS.code}return ${templateJS.variable};}}`;
+        // let templateJson = <Element>JSON.parse(convert.xml2json(template, {compact: false, spaces: 4}));
+        // let templateJS = this.buildUIFromTemplate(templateJson.elements[0], null);
+        // jsFile += `default_1.prototype.render=function(){with(this){${templateJS.code}return ${templateJS.variable};}}`;
+        let templateJS =compiler.compile(template, {}).render;
+        jsFile += `default_1.prototype.render=function(){var _c=page_1.Builder.create;var _e=page_1.Builder.empty;var _l=page_1.Builder.loop;var _v=page_1.Builder.space;${templateJS}}`;
+
+
+
 
         var toplevel_ast = uglifyJS.parse(jsFile, {strict: false});
         jsFile = toplevel_ast.print_to_string({beautify: true});
-
 
         var writeResult = await awaiter(fs.writeFile, "../www/scripts/" + file, jsFile);
 
@@ -62,8 +66,8 @@ export default class Build {
             closeBottom++;
         }
 
-        if(isConsole){
-            code+=`console.log(${element.attributes[":log"]})`;
+        if (isConsole) {
+            code += `console.log(${element.attributes[":log"]})`;
         }
         if (!isEmpty) {
             //todo support more than just tabris elements

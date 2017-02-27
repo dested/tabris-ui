@@ -11,10 +11,13 @@
   "dependencies": {
     "@types/node": "^7.0.5",
     "gulp": "^3.9.1",
+    "install": "^0.8.7",
     "jsdom": "^9.11.0",
+    "npm": "^4.3.0",
     "through2": "^2.0.3",
     "typescript": "^2.2.1",
     "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
+    "vue-template-compiler": "^2.2.1",
     "xml-js": "^1.0.2",
     "xml2js": "^0.4.17"
   }

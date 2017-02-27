@@ -4,7 +4,7 @@ import LoadingPage from "./LoadingPage.vue";
 
 let loadPage = (page) => {
   var tabrisPage=  page.render();
-    tabrisPage.open();
+  tabrisPage.element.open();
 };
 
 
