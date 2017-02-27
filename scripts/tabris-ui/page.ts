@@ -14,6 +14,7 @@ export abstract class Page {
 
     onResize() {
     }
+
 }
 
 export class Builder {

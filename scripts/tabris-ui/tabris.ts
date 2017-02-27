@@ -6,6 +6,9 @@ export class Widget {
     on(key: string, callback: () => void) {
     }
 
+    off(key: string, callback: () => void) {
+    }
+
     set(key: string, value: any) {
 
     }
@@ -16,6 +19,11 @@ export class Widget {
 
     appendTo(composite: Composite) {
         composite.append(this);
+    }
+    isDisposed() {
+        return false;
+    }
+    dispose() {
     }
 
     debug(indent: number) {

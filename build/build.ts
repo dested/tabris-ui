@@ -29,7 +29,7 @@ export default class Build {
         // let templateJS = this.buildUIFromTemplate(templateJson.elements[0], null);
         // jsFile += `default_1.prototype.render=function(){with(this){${templateJS.code}return ${templateJS.variable};}}`;
         let templateJS =compiler.compile(template, {}).render;
-        jsFile += `default_1.prototype.render=function(){var _c=page_1.Builder.create;var _e=page_1.Builder.empty;var _l=page_1.Builder.loop;var _v=page_1.Builder.space;${templateJS}}`;
+        jsFile += `default_1.prototype.render=function(){page_1.Builder.varCounter=0;var _c=page_1.Builder.create;var _e=page_1.Builder.empty;var _l=page_1.Builder.loop;var _v=page_1.Builder.space;${templateJS}}`;
 
 
 
