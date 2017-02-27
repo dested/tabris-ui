@@ -1,5 +1,5 @@
-import * as tabris from "tabris";
-
+// import * as tabris from "tabris";
+import * as tabris from "./tabris";
 
 export abstract class Page {
     abstract onLoad();
@@ -17,72 +17,88 @@ export abstract class Page {
 }
 
 export class Builder {
+    static varCounter = 0;
+
+    static variableName(key: string): string {
+        return key + "" + (this.varCounter++);
+    }
+
+
     static create(key: string, parm1: any, parm2: any): ElementResult {
-        let result = null;
-        let children: ElementResult[]    :        [];
-        var attributes = {};
-        var on = {};
+        let result = new ElementResult();
+        let childrenCommands: ElementResult[] = [];
+        let attributes = {};
+        let ons = {};
 
         if (Array.isArray(parm1)) {
-            children = parm1;
+            childrenCommands = parm1;
         }
         else {
             attributes = parm1.attrs;
             ons = parm1.on;
-            children = parm2;
+            childrenCommands = parm2;
         }
 
 
         switch (key) {
             case "Console":
-                console.log(attributes["log"])
+                result.commands.push(new ScreenCommand(CommandType.ConsoleLog, {value: attributes["log"]}));
                 break;
             default:
+                let widgetId = Builder.variableName(key);
+                result.commands.push(new ScreenCommand(CommandType.CreateWidget, {
+                    key: key,
+                    widgetId: widgetId
+                }));
+                result.widgetId = widgetId;
+
+
                 for (let attrKey in attributes) {
-                    var float = parseFloat(attributes[attrKey]);
+                    let float = parseFloat(attributes[attrKey]);
+                    let value;
                     if (!isNaN(float)) {
-                        attributes[attrKey] = float;
-                        continue;
+                        value = float;
                     }
-                    if (attributes[attrKey] === "true") {
-                        attributes[attrKey] = true;
-                        continue;
+                    else if (attributes[attrKey] === "true") {
+                        value = true;
                     }
-                    if (attributes[attrKey] === "false") {
-                        attributes[attrKey] = false;
-                        continue;
+                    else if (attributes[attrKey] === "false") {
+                        value = false;
+                    } else {
+                        value = attributes[attrKey];
                     }
+                    result.commands.push(new ScreenCommand(CommandType.SetProperty, {
+                        key: attrKey,
+                        value: value,
+                        widgetId: result.widgetId
+                    }));
                 }
-                console.log(`creating ${key} ${JSON.stringify(attributes)}`)
-                var elem = new tabris[key](attributes);
 
 
                 for (let on in ons) {
-                    let callback=ons[on];
-                    elem.on(on,()=>{
-                        callback();
-                    })
+                    let callback = ons[on];
+                    result.commands.push(new ScreenCommand(CommandType.AddEvent, {
+                        key: on,
+                        value: callback,
+                        widgetId: result.widgetId
+                    }));
                 }
 
 
-
-                if (children) {
-                    for (let child of children) {
-                        if (child) {
-                            if (Array.isArray(child)) {
-                                for (var i = 0; i < child.length; i++) {
-                                    if (child[i]) {
-                                        elem.append(child[i].element);
-                                    }
-                                }
-                            } else {
-                                elem.append(child.element);
+                if (childrenCommands) {
+                    for (let childCommand of childrenCommands) {
+                        if (childCommand) {
+                            result.commands.push(...childCommand.commands);
+                            if (childCommand.widgetId) {
+                                result.commands.push(new ScreenCommand(CommandType.AppendWidget, {
+                                    key: childCommand.widgetId,
+                                    widgetId: result.widgetId
+                                }));
                             }
                         }
+
                     }
                 }
-                result = new ElementResult();
-                result.element = elem;
                 break;
         }
         return result;
@@ -97,14 +113,36 @@ export class Builder {
     }
 
     static loop(values: any[], callback: (item: any) => ElementResult): ElementResult[] {
-        var elements: ElementResult[] = [];
-        for (var i = 0; i < values.length; i++) {
-            var val = values[i];
-            elements.push(callback(val))
+        let results: ElementResult[] = [];
+        for (let i = 0; i < values.length; i++) {
+            let val = values[i];
+            results.push(callback(val))
         }
-        return elements;
+        return results;
+    }
+}
+export class ScreenCommand {
+    commandType: string;
+    options: ICommandOptions;
+
+    constructor(commandType: string, options: ICommandOptions) {
+        this.commandType = commandType;
+        this.options = options;
     }
 }
 export class ElementResult {
-    element: tabris.Widget;
+    commands: ScreenCommand[] = [];
+    widgetId: string;
+}
+export class CommandType {
+    static AppendWidget = "AppendWidget";
+    static ConsoleLog = "ConsoleLog";
+    static CreateWidget = "CreateWidget";
+    static SetProperty = "SetProperty";
+    static AddEvent = "AddEvent";
+}
+export interface ICommandOptions {
+    value?: any;
+    key?: string;
+    widgetId?: string;
 }
