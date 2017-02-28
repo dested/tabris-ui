@@ -108,7 +108,6 @@ export class PageManager {
                 console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
                 if (this.widgets[command.options.key] && !this.widgets[command.options.key].isDisposed()) {
                     this.widgets[command.options.key].dispose();
-                    delete this.widgets[command.options.key];
                 }
                 break;
             case CommandType.ConsoleLog:

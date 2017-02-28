@@ -32,6 +32,7 @@ export class Builder {
             attributes = parm1.attrs;
             ons = parm1.on;
             childrenCommands = parm2;
+            result.key = parm1.key;
         }
 
 
@@ -47,12 +48,10 @@ export class Builder {
                 }));
                 result.widgetId = widgetId;
 
-
                 for (let attrKey in attributes) {
-                    let float = parseFloat(attributes[attrKey]);
                     let value;
-                    if (!isNaN(float)) {
-                        value = float;
+                    if (!isNaN(attributes[attrKey])) {
+                        value = parseFloat(attributes[attrKey]);
                     }
                     else if (attributes[attrKey] === "true") {
                         value = true;
@@ -133,18 +132,17 @@ export class Builder {
             let val = values[i];
             let result = callback(val);
             if (result) {
-
-                var oldWidgetId=result.widgetId;
-                var newWidgetId=result.widgetId+"_ind_" + val;
+                var oldWidgetId = result.widgetId;
+                var newWidgetId = result.widgetId + "_ind_" + (result.key || val);
 
                 for (let j = 0; j < result.commands.length; j++) {
                     let c = result.commands[j];
-                    if (c.options.widgetId .indexOf(oldWidgetId)===0) {
-                        c.options.widgetId = c.options.widgetId.replace(oldWidgetId,newWidgetId);
+                    if (c.options.widgetId .indexOf(oldWidgetId) === 0) {
+                        c.options.widgetId = c.options.widgetId.replace(oldWidgetId, newWidgetId);
                     }
 
-                    if (c.options.key .indexOf(oldWidgetId)===0) {
-                        c.options.key = c.options.key.replace(oldWidgetId,newWidgetId);
+                    if (c.options.key .indexOf(oldWidgetId) === 0) {
+                        c.options.key = c.options.key.replace(oldWidgetId, newWidgetId);
                     }
                 }
 
@@ -168,6 +166,7 @@ export class ScreenCommand {
 export class ElementResult {
     commands: ScreenCommand[] = [];
     widgetId: string;
+    key: string;
 }
 export class CommandType {
     static AppendWidget = "AppendWidget";
