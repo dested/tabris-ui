@@ -1,5 +1,5 @@
-import * as tabris from "tabris";
-// import * as tabris from "./tabris-ui/tabris";
+// import * as tabris from "tabris";
+import * as tabris from "./tabris";
 
 import * as JsDiff from "./diff";
 import {ScreenCommand, CommandType, ElementResult, Page} from "./page";
