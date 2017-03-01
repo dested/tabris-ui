@@ -48,8 +48,9 @@ export class PageManager {
                 }
 
             }
-
         }
+
+        this.tabrisPage.forceResize && this.tabrisPage.forceResize()
 
     }
 

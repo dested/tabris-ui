@@ -214,14 +214,12 @@
 
             this.totalIU=120;
             this.currentIU=0;
-/*
             var ci=setInterval(()=>{
                 this.currentIU++;
                 if(this.currentIU==this.totalIU){
                     clearInterval(ci)
                 }
-            },200);
-*/
+            },1000);
 //            PageManager.renderPage(this);
 
         }
