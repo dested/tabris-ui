@@ -43,7 +43,16 @@
 
     export default class extends Page {
 
-        version: number = 12;
+        _version: number = 12;
+        get version(): number {
+            return this._version;
+        };
+        set version(value: number) {
+            this._version = value;
+            PageManager.renderPage(this);
+        };
+
+
         onLoad() {
             var cl = setInterval(() => {
                 this.version += (Math.random() * 20) | 0;
