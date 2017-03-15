@@ -208,8 +208,6 @@
             this.breakfastFoods.push({image:'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',title:'corn7',cals:12,fat:93,carbs:900,protein:20})
             this.breakfastFoods.push({image:'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',title:'corn8',cals:12,fat:93,carbs:900,protein:20})
             this.breakfastFoods.push({image:'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',title:'corn9',cals:12,fat:93,carbs:900,protein:20})
-            this.breakfastFoods.push({image:'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',title:'corn10',cals:12,fat:93,carbs:900,protein:20})
-            this.breakfastFoods.push({image:'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',title:'corn11',cals:12,fat:93,carbs:900,protein:20})
 
 
             this.totalIU=120;

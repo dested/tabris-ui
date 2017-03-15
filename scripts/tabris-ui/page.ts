@@ -1,6 +1,3 @@
-// import * as tabris from "tabris";
-import * as tabris from "./tabris";
-
 export abstract class Page {
     abstract onLoad();
 
@@ -84,22 +81,23 @@ export class Builder {
                         if (childCommand) {
 
 
+                            let newWidgetId = result.widgetId + "_child_" + childCommand.widgetId;
+
+
                             for (let j = 0; j < childCommand.commands.length; j++) {
                                 let c = childCommand.commands[j];
-                                if (c.options.widgetId === childCommand.widgetId) {
-                                    c.options.widgetId = result.widgetId + "_child_" + childCommand.widgetId;
+
+                                if (c.options.widgetId.indexOf(childCommand.widgetId) >= 0) {
+                                    c.options.widgetId = c.options.widgetId.replace(childCommand.widgetId, newWidgetId);
                                 }
 
 
-                                if (c.options.key === childCommand.widgetId) {
-                                    c.options.key = result.widgetId + "_child_" + childCommand.widgetId;
+                                if (c.options.key.indexOf(childCommand.widgetId) >= 0) {
+                                    c.options.key = c.options.key.replace(childCommand.widgetId, newWidgetId);
                                 }
-
-
                             }
 
-
-                            childCommand.widgetId = result.widgetId + "_child_" + childCommand.widgetId;
+                            childCommand.widgetId = newWidgetId;
 
 
                             result.commands.push(...childCommand.commands);
@@ -137,11 +135,11 @@ export class Builder {
 
                 for (let j = 0; j < result.commands.length; j++) {
                     let c = result.commands[j];
-                    if (c.options.widgetId .indexOf(oldWidgetId) === 0) {
+                    if (c.options.widgetId.indexOf(oldWidgetId) === 0) {
                         c.options.widgetId = c.options.widgetId.replace(oldWidgetId, newWidgetId);
                     }
 
-                    if (c.options.key .indexOf(oldWidgetId) === 0) {
+                    if (c.options.key.indexOf(oldWidgetId) === 0) {
                         c.options.key = c.options.key.replace(oldWidgetId, newWidgetId);
                     }
                 }
