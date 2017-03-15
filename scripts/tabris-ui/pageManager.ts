@@ -1,5 +1,5 @@
-import * as tabris from "tabris";
-// import * as tabris from "./tabris";
+// import * as tabris from "tabris";
+import * as tabris from "./tabris";
 
 import * as JsDiff from "./diff";
 import {ScreenCommand, CommandType, ElementResult, Page} from "./page";
@@ -9,17 +9,33 @@ export class PageManager {
     static widgets = {};
     static tabrisPage: tabris.Page;
 
-    static loadPage(page:Page) {
+    static loadPage(page: Page) {
         page.onLoad();
         this.renderPage(page);
         if (this.tabrisPage) {
             this.tabrisPage.open();
         }
     }
-    public static renderPage(page:Page) {
+
+    static renders = {};
+
+    public static queueRender(page: Page) {
+        if (!page.id) {
+            page.id = (Math.random() * 10000000) | 0;
+        }
+
+        if (!this.renders[page.id]) {
+            setTimeout(() => {
+                delete this.renders[page.id];
+                this.renderPage(page);
+            }, 0);
+        }
+    }
+
+    public static renderPage(page: Page) {
         let result = <ElementResult>(<any>page).render();
 
-        let diffArray = <{count: number, added: boolean, removed: boolean, value: ScreenCommand[]}[]>JsDiff.diffArrays(this.lastCommands, result.commands);
+        let diffArray = <{ count: number, added: boolean, removed: boolean, value: ScreenCommand[] }[]>JsDiff.diffArrays(this.lastCommands, result.commands);
         this.lastCommands = result.commands;
         for (let i = 0; i < diffArray.length; i++) {
             let diff = diffArray[i];

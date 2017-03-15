@@ -1,3 +1,4 @@
+import {PageManager} from "./pageManager";
 export abstract class Page {
     abstract onLoad();
 
@@ -12,6 +13,22 @@ export abstract class Page {
     onResize() {
     }
 
+}
+export function State() {
+    return function (target, key) {
+        Object.defineProperty(target, key, {
+            get: function () {
+                return this['___' + key];
+            },
+            set: function (value) {
+                debugger;
+                let result = this['___' + key] = value;
+                PageManager.queueRender(<Page>this);
+                return result;
+            }
+        });
+
+    }
 }
 
 export class Builder {
