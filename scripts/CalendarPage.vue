@@ -37,35 +37,11 @@
         <TabFolder textColor="white" left="0" right="0" top="prev()" bottom="0" background="#607D8B">
             <Tab background="white" title="BREAKFAST" textColor="white">
                 <ScrollView left="0" right="0" top="0" bottom="0">
-
                     <Composite left="0" right="0" top="prev()" height="60" background="white"
                                v-for="food in breakfastFoods" :key="food.title">
-                        <Composite left="0" right="0" top="0" bottom="1" background="white">
-                            <Composite left="8" top="8" width="44" height="44" background="#455A64" cornerRadius="22">
-                            </Composite>
-                            <ImageView scaleMode="stretch" cornerRadius="20" left="10" top="10" width="40"
-                                       height="40" :image="food.image" cornerRadius="22">
-                            </ImageView>
-
-
-                            <TextView left="60" top="20" right="40" alignment="left" :text="food.title"
-                                      textColor="black" maxLines="1" font="13px">
-
-                            </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
-                                       @tap="deleteFood(breakfastFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
-                                          font="13px"></TextView>
-                            </Composite>
-                        </Composite>
-
-                        <Composite left="0" right="0" height="1" bottom="0" background="#78909C">
-
-                        </Composite>
+                        <Card :food="food"></Card>
                     </Composite>
-
                 </ScrollView>
-
             </Tab>
             <Tab title="LUNCH" textColor="white">
                 <ScrollView left="0" right="0" top="0" bottom="0" background="white">
@@ -168,10 +144,16 @@
 
 <script lang="ts">
 
-    import {Page} from "./tabris-ui/page";
-    import {Component, PageManager} from "./tabris-ui/pageManager";
+    import Card from "./Card.vue";
 
-    @Component()
+    import {Page} from "./tabris-ui/page";
+    import {Component} from "./tabris-ui/pageManager";
+    import {IFood} from "./IFood";
+
+    @Component({
+        name:'CalendarPage',
+        components: [Card]
+    })
     export default class extends Page {
 
         totalIU: number = 5;
@@ -263,14 +245,12 @@
 
             this.totalIU = 120;
             this.currentIU = 0;
-/*
             var ci = setInterval(() => {
                 this.currentIU++;
                 if (this.currentIU == this.totalIU) {
                     clearInterval(ci)
                 }
             }, 1000);
-*/
 
         }
 
@@ -416,14 +396,6 @@
 
     }
 
-    export interface IFood
-    {
-        image: string;
-        title: string;
-        cals: number;
-        fat: number;
-        carbs: number;
-        protein: number;
-    }
+
 </script>
 

@@ -1901,7 +1901,7 @@ function genElement (el) {
         if (el.component) {
             code = genComponent(el.component, el);
         } else {
-            var data = el.plain ? undefined : genData(el);
+            var data = /*el.plain ? undefined : */genData(el);
 
             var children = el.inlineTemplate ? null : genChildren(el, true);
             code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
@@ -2027,6 +2027,7 @@ function genData (el) {
     for (var i = 0; i < dataGenFns.length; i++) {
         data += dataGenFns[i](el);
     }
+
 
     el.attrs=el.attrs||[];
 

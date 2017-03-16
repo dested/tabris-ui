@@ -3,10 +3,10 @@ import * as tabris from './tabris-lib'
 import {Observable} from "./object-observer";
 
 import * as JsDiff from "./diff";
-import {ScreenCommand, CommandType, ElementResult, Page} from "./page";
+import {ScreenCommand, CommandType, ElementResult, Page, Composite} from "./page";
 
 
-export function Component() {
+export function Component(options: { name: string; components?: any[] } = {name: 'Comp'}) {
     return function (target: any) {
         // save a reference to the original constructor
         let original = target;
@@ -23,6 +23,7 @@ export function Component() {
         // the new constructor behaviour
         let f: any = function (...args) {
             let result = construct(original, args);
+            result.components = options.components || [];
             result = Observable.from(result);
 
             result.observe(() => {
@@ -33,7 +34,7 @@ export function Component() {
 
         // copy prototype so instanceof operator still works
         f.prototype = original.prototype;
-
+        f.prototype.$$component_name = options.name
         return f;
     }
 }
@@ -77,13 +78,13 @@ export class PageManager {
             if (diff.removed) {
                 for (let j = 0; j < diff.value.length; j++) {
                     let command = diff.value[j];
-                    this.removeCommand(command, j, diff.value);
+                    this.removeCommand(page, command, j, diff.value);
                 }
             }
             else if (diff.added) {
                 for (let j = 0; j < diff.value.length; j++) {
                     let command = diff.value[j];
-                    this.addCommand(command, j, diff.value);
+                    this.addCommand(page, command, j, diff.value);
                 }
             } else {
                 for (let j = 0; j < diff.value.length; j++) {
@@ -106,7 +107,7 @@ export class PageManager {
     }
 
 
-    static addCommand(command: ScreenCommand, index: number, commands: ScreenCommand[]) {
+    static addCommand(page: Page, command: ScreenCommand, index: number, commands: ScreenCommand[]) {
         // console.log(`adding ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
         switch (command.commandType) {
             case CommandType.CreateWidget:
@@ -120,7 +121,11 @@ export class PageManager {
                         break;
                     }
                 }
-                this.widgets[command.options.widgetId] = new tabris[command.options.key](attrs);
+
+
+                this.widgets[command.options.widgetId] = this.createComponent(page, command.options.key, attrs);
+
+
                 if (command.options.key === "Page") {
                     this.tabrisPage = this.widgets[command.options.widgetId];
                 }
@@ -144,7 +149,7 @@ export class PageManager {
         }
     }
 
-    static removeCommand(command: ScreenCommand, index: number, commands: ScreenCommand[]) {
+    static removeCommand(page: Page, command: ScreenCommand, index: number, commands: ScreenCommand[]) {
         switch (command.commandType) {
             case CommandType.CreateWidget:
                 break;
@@ -167,4 +172,52 @@ export class PageManager {
         }
     }
 
+    private static createComponent(page: Page, key: string, attrs: {}) {
+
+        if (['Button',
+                'Canvas',
+                'Cell',
+                'CheckBox',
+                'CollectionView',
+                'Composite',
+                'Drawer',
+                'ImageView',
+                'NavigationView',
+                'Page',
+                'Picker',
+                'ProgressBar',
+                'RadioButton',
+                'ScrollView',
+                'SearchAction',
+                'Slider',
+                'Switch',
+                'Tab',
+                'TabFolder',
+                'TextInput',
+                'TextView',
+                'ToggleButton',
+                'Video',
+                'WebView'].indexOf(key) != -1) {
+            return new tabris[key](attrs);
+        } else {
+            for (let i = 0; i < page.components.length; i++) {
+                let obj = <any>page.components[i];
+                if (obj.prototype.$$component_name === key) {
+                    let component = new obj();
+                    debugger;
+                    for (let attr in attrs) {
+                        component[attr] = attrs[attr];
+                    }
+                    //todo
+                    //render method returns a list of commands, i think you shoudl append that to the
+                    //commands array
+
+                    //maybe you detect that at render of the page and splice it into the commands
+                    //idk how attrs should work
+                    return component.render();
+                }
+            }
+            throw 'component not found: ' + key
+        }
+    }
 }

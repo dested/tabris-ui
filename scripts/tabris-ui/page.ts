@@ -1,8 +1,8 @@
 import {PageManager} from "./pageManager";
-export abstract class Page {
+export abstract class Composite {
     abstract onLoad();
 
-    _id = (Math.random() * 10000000) | 0;
+    components: Composite[] = [];
 
     onComponentCreated() {
 
@@ -17,6 +17,13 @@ export abstract class Page {
 
 }
 
+export abstract class Page extends Composite {
+
+    _id = (Math.random() * 10000000) | 0;
+
+}
+
+
 export class Builder {
 
     static create(key: string, parm1: any, parm2: any): ElementResult {
@@ -28,11 +35,13 @@ export class Builder {
         if (Array.isArray(parm1)) {
             childrenCommands = parm1;
         }
-        else {
+        else if (parm1 != null) {
             attributes = parm1.attrs;
             ons = parm1.on;
             childrenCommands = parm2;
             result.key = parm1.key;
+        } else {
+            debugger;
         }
 
 
