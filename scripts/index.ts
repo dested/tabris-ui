@@ -1,7 +1,9 @@
-﻿
-import CalendarPage from "./CalendarPage.vue";
+﻿import CalendarPage from "./CalendarPage.vue";
 import {PageManager} from "./tabris-ui/pageManager";
 
-setTimeout(()=>{
-    PageManager.loadPage(new CalendarPage());
-},10)
+declare var process;
+
+setTimeout(() => {
+    let calendarPage = new CalendarPage();
+    PageManager.loadPage(calendarPage);
+}, 10);

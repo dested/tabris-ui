@@ -12,7 +12,8 @@
     "inlineSourceMap": false,
     "outDir": "../www/scripts/",
     "types": ["vue-typescript-import-dts"],
-    "noImplicitUseStrict": true
+    "noImplicitUseStrict": true,
+    "lib": ["es2016","dom"]
   },
   "exclude": [
     "node_modules"

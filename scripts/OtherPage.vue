@@ -19,7 +19,7 @@
     export default class extends Page {
 
         drawHeight: number = 30;
-        ci = null;
+        ci: number = 0;
 
         onLoad() {
             this.ci = setInterval(() => {

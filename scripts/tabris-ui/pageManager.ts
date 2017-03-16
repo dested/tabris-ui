@@ -1,8 +1,42 @@
-// import * as tabris from "tabris";
-import * as tabris from "./tabris";
+import * as tabris from './tabris-lib'
+
+import {Observable} from "./object-observer";
 
 import * as JsDiff from "./diff";
 import {ScreenCommand, CommandType, ElementResult, Page} from "./page";
+
+
+export function Component() {
+    return function (target: any) {
+        // save a reference to the original constructor
+        let original = target;
+
+        // a utility function to generate instances of a class
+        function construct(constructor, args) {
+            let c: any = function () {
+                return constructor.apply(this, args);
+            };
+            c.prototype = constructor.prototype;
+            return new c();
+        }
+
+        // the new constructor behaviour
+        let f: any = function (...args) {
+            let result = construct(original, args);
+            result = Observable.from(result);
+
+            result.observe(() => {
+                PageManager.queueRender(result);
+            });
+            return result;
+        };
+
+        // copy prototype so instanceof operator still works
+        f.prototype = original.prototype;
+
+        return f;
+    }
+}
 
 export class PageManager {
     static lastCommands: ScreenCommand[] = [];
@@ -20,14 +54,15 @@ export class PageManager {
     static renders = {};
 
     public static queueRender(page: Page) {
-        if (!page.id) {
-            page.id = (Math.random() * 10000000) | 0;
-        }
-
-        if (!this.renders[page.id]) {
+        if (!this.renders[page._id]) {
+            this.renders[page._id] = true;
             setTimeout(() => {
-                delete this.renders[page.id];
+                delete this.renders[page._id];
+                // console.profile('render');
+                // var m = new Date();
                 this.renderPage(page);
+                // console.log((new Date() - m))
+                // console.profileEnd('render');
             }, 0);
         }
     }
@@ -72,7 +107,7 @@ export class PageManager {
 
 
     static addCommand(command: ScreenCommand, index: number, commands: ScreenCommand[]) {
-        console.log(`adding ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
+        // console.log(`adding ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
         switch (command.commandType) {
             case CommandType.CreateWidget:
                 let attrs = {};
@@ -116,13 +151,13 @@ export class PageManager {
             case CommandType.SetProperty:
                 break;
             case CommandType.AddEvent:
-                console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
+                // console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
                 if (this.widgets[command.options.widgetId] && !this.widgets[command.options.widgetId].isDisposed()) {
                     this.widgets[command.options.widgetId].off(command.options.key, command.options.value);
                 }
                 break;
             case CommandType.AppendWidget:
-                console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
+                // console.log(`removing ${command.commandType} ${command.options.key} ${command.options.value || ''} ${command.options.widgetId} `);
                 if (this.widgets[command.options.key] && !this.widgets[command.options.key].isDisposed()) {
                     this.widgets[command.options.key].dispose();
                 }

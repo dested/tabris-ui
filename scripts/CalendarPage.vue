@@ -21,13 +21,15 @@
         <Composite left="0" right="0" top="prev() 1" height="150" background="#546E7A">
             <Composite centerX="0" top="20" height="100" width="100" background="red">
             </Composite>
-            <Composite centerX="0" :top="20+100-((currentIU/totalIU)*100)" :height="((currentIU/totalIU)*100)" width="100" background="blue">
+            <Composite centerX="0" :top="20+100-((currentIU/totalIU)*100)" :height="((currentIU/totalIU)*100)"
+                       width="100" background="blue">
             </Composite>
             <TextView top="prev() 5" left="0" right="0" alignment="center" textColor="white"
                       :text="currentIU+'IU out of '+totalIU+' IU'">
             </TextView>
-            <Composite right="5" bottom="5" height="20" width="90" background="#263238" >
-                <TextView @tap="updateFoods()" text="Foods high in Vitamin A" font="12px" alignment="center" left="0" right="0" textColor="white" ></TextView>
+            <Composite right="5" bottom="5" height="20" width="90" background="#263238">
+                <TextView @tap="updateFoods()" text="Foods high in Vitamin A" font="12px" alignment="center" left="0"
+                          right="0" textColor="white"></TextView>
             </Composite>
         </Composite>
 
@@ -50,8 +52,10 @@
                                       textColor="black" maxLines="1" font="13px">
 
                             </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true" @tap="deleteFood(breakfastFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red" font="13px"></TextView>
+                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
+                                       @tap="deleteFood(breakfastFoods,food)">
+                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
+                                          font="13px"></TextView>
                             </Composite>
                         </Composite>
 
@@ -80,8 +84,10 @@
                                       textColor="black" maxLines="1" font="13px">
 
                             </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true" @tap="deleteFood(lunchFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red" font="13px"></TextView>
+                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
+                                       @tap="deleteFood(lunchFoods,food)">
+                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
+                                          font="13px"></TextView>
                             </Composite>
                         </Composite>
 
@@ -109,8 +115,10 @@
                                       textColor="black" maxLines="1" font="13px">
 
                             </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true" @tap="deleteFood(dinnerFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red" font="13px"></TextView>
+                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
+                                       @tap="deleteFood(dinnerFoods,food)">
+                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
+                                          font="13px"></TextView>
                             </Composite>
                         </Composite>
 
@@ -138,8 +146,10 @@
                                       textColor="black" maxLines="1" font="13px">
 
                             </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true" @tap="deleteFood(snackFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red" font="13px"></TextView>
+                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
+                                       @tap="deleteFood(snackFoods,food)">
+                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
+                                          font="13px"></TextView>
                             </Composite>
                         </Composite>
 
@@ -158,44 +168,109 @@
 
 <script lang="ts">
 
-    import {Page, State} from "./tabris-ui/page";
-    import {PageManager} from "./tabris-ui/pageManager";
+    import {Page} from "./tabris-ui/page";
+    import {Component, PageManager} from "./tabris-ui/pageManager";
 
-
+    @Component()
     export default class extends Page {
 
-        @State() totalIU: number = 5;
+        totalIU: number = 5;
 
-        @State() date: number = 5;
+        date: number = 5;
 
-        @State() currentIU: number = 5;
+        currentIU: number = 5;
 
-        @State() breakfastFoods: IFood[] = [];
-        @State() lunchFoods: IFood[] = [];
-        @State() dinnerFoods: IFood[] = [];
-        @State() snackFoods: IFood[] = [];
+        breakfastFoods: IFood[] = [];
+        lunchFoods: IFood[] = [];
+        dinnerFoods: IFood[] = [];
+        snackFoods: IFood[] = [];
 
 
         onLoad() {
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn1', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn2', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn3', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn4', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn5', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn6', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn7', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn8', cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn9', cals: 12, fat: 93, carbs: 900, protein: 20})
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn1',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn2',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn3',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn4',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn5',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn6',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn7',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn8',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn9',
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
 
 
             this.totalIU = 120;
             this.currentIU = 0;
+/*
             var ci = setInterval(() => {
                 this.currentIU++;
                 if (this.currentIU == this.totalIU) {
                     clearInterval(ci)
                 }
             }, 1000);
+*/
 
         }
 
@@ -205,7 +280,6 @@
 
         deleteFood(foods: IFood[], food: IFood) {
             foods.splice(foods.indexOf(food), 1);
-            PageManager.renderPage(this);
         }
 
         updateFoods() {
@@ -213,27 +287,124 @@
 
             this.breakfastFoods = [];
 
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.breakfastFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.breakfastFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
 
 
-            this.lunchFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.lunchFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.lunchFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
+            this.lunchFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.lunchFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.lunchFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
 
-            this.dinnerFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.dinnerFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.dinnerFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.dinnerFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.dinnerFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.dinnerFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
+            this.dinnerFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.dinnerFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.dinnerFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.dinnerFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.dinnerFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.dinnerFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
 
 
-            this.snackFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
-            this.snackFoods.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20})
+            this.snackFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
+            this.snackFoods.push({
+                image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg',
+                title: 'corn' + ((Math.random() * 100000) | 0),
+                cals: 12,
+                fat: 93,
+                carbs: 900,
+                protein: 20
+            })
 
-            PageManager.renderPage(this);
         }
 
         onNavigateTo() {
@@ -245,8 +416,14 @@
 
     }
 
-    export interface IFood {image: string;title: string;cals: number;fat: number;carbs: number;protein: number;
+    export interface IFood
+    {
+        image: string;
+        title: string;
+        cals: number;
+        fat: number;
+        carbs: number;
+        protein: number;
     }
-    []
 </script>
 

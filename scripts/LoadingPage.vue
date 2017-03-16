@@ -38,20 +38,12 @@
 <script lang="ts">
 
     import {Page} from "./tabris-ui/page";
-    import {PageManager} from "./tabris-ui/pageManager";
+    import {Component, PageManager} from "./tabris-ui/pageManager";
     import OtherPage from "./OtherPage.vue";
-
+    @Component()
     export default class extends Page {
 
-        _version: number = 12;
-        get version(): number {
-            return this._version;
-        };
-        set version(value: number) {
-            this._version = value;
-            PageManager.renderPage(this);
-        };
-
+        version: number = 12;
 
         onLoad() {
             var cl = setInterval(() => {
