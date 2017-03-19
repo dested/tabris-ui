@@ -170,7 +170,7 @@ export abstract class Composite {
                         return component.render();
                     }
                 }
-                throw 'component not found: ' + key
+                throw 'component not found: ' + key;
                 break;
         }
         return result;

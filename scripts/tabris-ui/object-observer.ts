@@ -1,6 +1,6 @@
 //https://www.npmjs.com/package/object-observer
 
-     var proxiesToTargetsMap = new Map(),
+var proxiesToTargetsMap = new Map(),
     targetsToObserved = new Map(),
     observedToObservable = new Map(),
     nonObservables = ['Date', 'Blob', 'Number', 'String', 'Boolean', 'Error', 'SyntaxError', 'TypeError', 'URIError', 'Function', 'Promise', 'RegExp'];
@@ -229,6 +229,7 @@ function proxiedSet(target, key, value) {
         path;
 
     result = Reflect.set(target, key, value);
+    if(key.indexOf('__')===0)return result;
     if (observable.callbacks.length && result && value !== oldValue) {
         path = observed.path.concat(key);
 
@@ -306,6 +307,7 @@ export function Observed(origin, ownKey, parent) {
         throw new Error('parent, when supplied, MUST be an instance of Observed');
     }
 
+
     targetClone = copyShallow(origin);
 
     if (Array.isArray(targetClone)) {
@@ -322,7 +324,6 @@ export function Observed(origin, ownKey, parent) {
             deleteProperty: proxiedDelete
         });
     }
-
     targetsToObserved.set(targetClone, this);
     proxiesToTargetsMap.set(revokableProxy.proxy, targetClone);
     Reflect.defineProperty(this, 'revokable', {value: revokableProxy});

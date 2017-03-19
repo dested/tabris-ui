@@ -8,8 +8,8 @@
         </ImageView>
 
 
-        <TextView left="60" top="20" right="40" alignment="left" :text="item.title"
-                  textColor="black" maxLines="1" font="13px">
+        <TextView left="60" top="20" right="40" alignment="left" :text="item.title +' '+ foo"
+                  textColor="black" maxLines="1" @tap="foo++" font="13px">
 
         </TextView>
         <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
@@ -36,7 +36,7 @@
     })
     export default class extends Composite {
         item: IFood;
-
+foo:number=0;
         onLoad() {
         }
 

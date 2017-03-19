@@ -31,7 +31,7 @@ export function Component(options: { name: string; components?: any[] } = {name:
                 if (result instanceof Page) {
                     PageManager.queueRender(result);
                 } else if (result instanceof Composite) {
-                    //   PageManager.queueRender(result.page);
+                      PageManager.queueRender(result.__page);
                 }
 
             });
