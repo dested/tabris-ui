@@ -34,10 +34,10 @@ export default class Build {
                 let templateJS = compiler.compile(template, {}).render;
                 jsFile += `
                         default_1.prototype.render=function(){
-                            var _c=page_1.Builder.create;
-                            var _e=page_1.Builder.empty;
-                            var _l=page_1.Builder.loop;
-                            var _v=page_1.Builder.space;
+                            var _c=this._create.bind(this);
+                            var _e=this._empty.bind(this);
+                            var _l=this._loop.bind(this);
+                            var _v=this._space.bind(this);
                             ${templateJS}
                         }`;
 

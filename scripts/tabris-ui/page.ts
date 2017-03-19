@@ -1,7 +1,11 @@
 import {PageManager} from "./pageManager";
 export abstract class Composite {
+    private callbacks: { [key: string]: Function } = {};
+    private __componentInstances: { [key: string]: Composite } = {};
+
     abstract onLoad();
 
+    __page: Page = undefined;
     components: Composite[] = [];
 
     onComponentCreated() {
@@ -15,18 +19,16 @@ export abstract class Composite {
     onResize() {
     }
 
-}
+    $emit(key: string, ...args: any[]) {
+        if (this.callbacks[key]) {
+            this.callbacks[key].apply(this, args);
+        } else {
+            throw "Callback not found " + key;
+        }
+    }
 
-export abstract class Page extends Composite {
 
-    _id = (Math.random() * 10000000) | 0;
-
-}
-
-
-export class Builder {
-
-    static create(key: string, parm1: any, parm2: any): ElementResult {
+    _create(key: string, parm1: any, parm2: any): ElementResult {
         let result = new ElementResult();
         let childrenCommands: ElementResult[] = [];
         let attributes = {};
@@ -40,8 +42,6 @@ export class Builder {
             ons = parm1.on;
             childrenCommands = parm2;
             result.key = parm1.key;
-        } else {
-            debugger;
         }
 
 
@@ -49,7 +49,30 @@ export class Builder {
             case "Console":
                 result.commands.push(new ScreenCommand(CommandType.ConsoleLog, {value: attributes["log"]}));
                 break;
-            default:
+            case 'Button':
+            case 'Canvas':
+            case 'Cell':
+            case 'CheckBox':
+            case 'CollectionView':
+            case 'Composite':
+            case 'Drawer':
+            case 'ImageView':
+            case 'NavigationView':
+            case 'Page':
+            case 'Picker':
+            case 'ProgressBar':
+            case 'RadioButton':
+            case 'ScrollView':
+            case 'SearchAction':
+            case 'Slider':
+            case 'Switch':
+            case 'Tab':
+            case 'TabFolder':
+            case 'TextInput':
+            case 'TextView':
+            case 'ToggleButton':
+            case 'Video':
+            case 'WebView:' :
                 let widgetId = attributes["id"];
                 result.commands.push(new ScreenCommand(CommandType.CreateWidget, {
                     key: key,
@@ -124,19 +147,44 @@ export class Builder {
                     }
                 }
                 break;
+            default:
+                for (let i = 0; i < this.components.length; i++) {
+                    let obj = <any>this.components[i];
+                    if (obj.prototype.$$component_name === key) {
+                        let component;
+                        debugger;
+                        if (this.__componentInstances[attributes["id"]]) {
+                            component = this.__componentInstances[attributes["id"]];
+                        } else {
+                            component = this.__componentInstances[attributes["id"]] = new obj();
+                        }
+                        component.__page = this;
+                        for (let attr in attributes) {
+                            component[attr] = attributes[attr];
+                        }
+                        for (let on in ons) {
+                            let callback = ons[on];
+                            component.callbacks[on] = callback;
+                        }
+
+                        return component.render();
+                    }
+                }
+                throw 'component not found: ' + key
+                break;
         }
         return result;
     }
 
-    static space(key: string) {
+    _space(key: string) {
         return null
     }
 
-    static empty() {
+    _empty() {
         return null
     }
 
-    static loop(values: any[], callback: (item: any) => ElementResult): ElementResult[] {
+    _loop(values: any[], callback: (item: any) => ElementResult): ElementResult[] {
         let results: ElementResult[] = [];
         for (let i = 0; i < values.length; i++) {
             let val = values[i];
@@ -164,6 +212,14 @@ export class Builder {
         return results;
     }
 }
+
+export abstract class Page extends Composite {
+
+    _id = (Math.random() * 10000000) | 0;
+
+}
+
+
 export class ScreenCommand {
     commandType: string;
     options: ICommandOptions;

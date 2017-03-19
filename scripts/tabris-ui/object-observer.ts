@@ -1,4 +1,6 @@
-var proxiesToTargetsMap = new Map(),
+//https://www.npmjs.com/package/object-observer
+
+     var proxiesToTargetsMap = new Map(),
     targetsToObserved = new Map(),
     observedToObservable = new Map(),
     nonObservables = ['Date', 'Blob', 'Number', 'String', 'Boolean', 'Error', 'SyntaxError', 'TypeError', 'URIError', 'Function', 'Promise', 'RegExp'];

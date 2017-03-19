@@ -26,8 +26,14 @@ export function Component(options: { name: string; components?: any[] } = {name:
             result.components = options.components || [];
             result = Observable.from(result);
 
-            result.observe(() => {
-                PageManager.queueRender(result);
+            result.observe((changes: any[]) => {
+                if (changes[0].path[0].indexOf("__") == 0)return;
+                if (result instanceof Page) {
+                    PageManager.queueRender(result);
+                } else if (result instanceof Composite) {
+                    //   PageManager.queueRender(result.page);
+                }
+
             });
             return result;
         };
@@ -173,51 +179,6 @@ export class PageManager {
     }
 
     private static createComponent(page: Page, key: string, attrs: {}) {
-
-        if (['Button',
-                'Canvas',
-                'Cell',
-                'CheckBox',
-                'CollectionView',
-                'Composite',
-                'Drawer',
-                'ImageView',
-                'NavigationView',
-                'Page',
-                'Picker',
-                'ProgressBar',
-                'RadioButton',
-                'ScrollView',
-                'SearchAction',
-                'Slider',
-                'Switch',
-                'Tab',
-                'TabFolder',
-                'TextInput',
-                'TextView',
-                'ToggleButton',
-                'Video',
-                'WebView'].indexOf(key) != -1) {
-            return new tabris[key](attrs);
-        } else {
-            for (let i = 0; i < page.components.length; i++) {
-                let obj = <any>page.components[i];
-                if (obj.prototype.$$component_name === key) {
-                    let component = new obj();
-                    debugger;
-                    for (let attr in attrs) {
-                        component[attr] = attrs[attr];
-                    }
-                    //todo
-                    //render method returns a list of commands, i think you shoudl append that to the
-                    //commands array
-
-                    //maybe you detect that at render of the page and splice it into the commands
-                    //idk how attrs should work
-                    return component.render();
-                }
-            }
-            throw 'component not found: ' + key
-        }
+        return new tabris[key](attrs);
     }
 }

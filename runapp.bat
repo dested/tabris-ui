@@ -5,4 +5,4 @@ cd ../build
 call tsc
 call node build
 cd ../
-cordova run android
+call cordova run android

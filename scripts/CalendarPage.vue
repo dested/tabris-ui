@@ -1,22 +1,8 @@
 ﻿<template>
 
     <Page topLevel="true" id="OtherPage" title="foo">
-        <Composite background="#37474F" top="0" left="0" right="0" height="40">
-            <Composite background="#455A64" left="0" width="40" top="0" bottom="0" highlightOnTouch="true"
-                       @tap="date>0 && date--">
-                <TextView centerX="0" centerY="0" textColor="white" text="<" v-if="date>0">
-                </TextView>
-            </Composite>
-            <Composite background="#455A64" top="0" left="41" right="41" height="40" highlightOnTouch="true">
-                <TextView left="0" alignment="center" textColor="white" right="0" top="0" bottom="0" :text="date">
-                </TextView>
-            </Composite>
-            <Composite background="#455A64" left="prev() 1" width="40" top="0" bottom="0" highlightOnTouch="true"
-                       @tap="date<10 && date++">
-                <TextView centerX="0" centerY="0" text=">" textColor="white" v-if="date<10">
-                </TextView>
-            </Composite>
-        </Composite>
+        <CalendarHeader :date="this.date" @dateUpdated="updateDate($event)"></CalendarHeader>
+
 
         <Composite left="0" right="0" top="prev() 1" height="150" background="#546E7A">
             <Composite centerX="0" top="20" height="100" width="100" background="red">
@@ -25,7 +11,7 @@
                        width="100" background="blue">
             </Composite>
             <TextView top="prev() 5" left="0" right="0" alignment="center" textColor="white"
-                      :text="currentIU+'IU out of '+totalIU+' IU'">
+                      :text="date+' '+currentIU+'IU out of '+totalIU+' IU'">
             </TextView>
             <Composite right="5" bottom="5" height="20" width="90" background="#263238">
                 <TextView @tap="updateFoods()" text="Foods high in Vitamin A" font="12px" alignment="center" left="0"
@@ -39,7 +25,7 @@
                 <ScrollView left="0" right="0" top="0" bottom="0">
                     <Composite left="0" right="0" top="prev()" height="60" background="white"
                                v-for="food in breakfastFoods" :key="food.title">
-                        <Card :food="food"></Card>
+                        <Card :item="food" @delete="deleteFood(breakfastFoods,food)"></Card>
                     </Composite>
                 </ScrollView>
             </Tab>
@@ -48,28 +34,7 @@
 
                     <Composite left="0" right="0" top="prev()" height="60" background="white"
                                v-for="food in lunchFoods" :key="food.title">
-                        <Composite left="0" right="0" top="0" bottom="1" background="white">
-                            <Composite left="8" top="8" width="44" height="44" background="#455A64" cornerRadius="22">
-                            </Composite>
-                            <ImageView scaleMode="stretch" cornerRadius="20" left="10" top="10" width="40"
-                                       height="40" :image="food.image" cornerRadius="22">
-                            </ImageView>
-
-
-                            <TextView left="60" top="20" right="40" alignment="left" :text="food.title"
-                                      textColor="black" maxLines="1" font="13px">
-
-                            </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
-                                       @tap="deleteFood(lunchFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
-                                          font="13px"></TextView>
-                            </Composite>
-                        </Composite>
-
-                        <Composite left="0" right="0" height="1" bottom="0" background="#78909C">
-
-                        </Composite>
+                        <Card :item="food" @delete="deleteFood(lunchFoods,food)"></Card>
                     </Composite>
 
                 </ScrollView>
@@ -79,28 +44,7 @@
 
                     <Composite left="0" right="0" top="prev()" height="60" background="white"
                                v-for="food in dinnerFoods" :key="food.title">
-                        <Composite left="0" right="0" top="0" bottom="1" background="white">
-                            <Composite left="8" top="8" width="44" height="44" background="#455A64" cornerRadius="22">
-                            </Composite>
-                            <ImageView scaleMode="stretch" cornerRadius="20" left="10" top="10" width="40"
-                                       height="40" :image="food.image" cornerRadius="22">
-                            </ImageView>
-
-
-                            <TextView left="60" top="20" right="40" alignment="left" :text="food.title"
-                                      textColor="black" maxLines="1" font="13px">
-
-                            </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
-                                       @tap="deleteFood(dinnerFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
-                                          font="13px"></TextView>
-                            </Composite>
-                        </Composite>
-
-                        <Composite left="0" right="0" height="1" bottom="0" background="#78909C">
-
-                        </Composite>
+                        <Card :item="food" @delete="deleteFood(dinnerFoods,food)"></Card>
                     </Composite>
 
                 </ScrollView>
@@ -110,28 +54,7 @@
 
                     <Composite left="0" right="0" top="prev()" height="60" background="white"
                                v-for="food in snackFoods" :key="food.title">
-                        <Composite left="0" right="0" top="0" bottom="1" background="white">
-                            <Composite left="8" top="8" width="44" height="44" background="#455A64" cornerRadius="22">
-                            </Composite>
-                            <ImageView scaleMode="stretch" cornerRadius="20" left="10" top="10" width="40"
-                                       height="40" :image="food.image" cornerRadius="22">
-                            </ImageView>
-
-
-                            <TextView left="60" top="20" right="40" alignment="left" :text="food.title"
-                                      textColor="black" maxLines="1" font="13px">
-
-                            </TextView>
-                            <Composite right="5" top="5" bottom="5" width="50" highlightOnTouch="true"
-                                       @tap="deleteFood(snackFoods,food)">
-                                <TextView alignment="center" centerY="0" text="Delete" textColor="red"
-                                          font="13px"></TextView>
-                            </Composite>
-                        </Composite>
-
-                        <Composite left="0" right="0" height="1" bottom="0" background="#78909C">
-
-                        </Composite>
+                        <Card :item="food" @delete="deleteFood(snackFoods,food)"></Card>
                     </Composite>
 
                 </ScrollView>
@@ -145,16 +68,18 @@
 <script lang="ts">
 
     import Card from "./Card.vue";
+    import CalendarHeader from "./CalendarHeader.vue";
 
     import {Page} from "./tabris-ui/page";
     import {Component} from "./tabris-ui/pageManager";
     import {IFood} from "./IFood";
 
     @Component({
-        name:'CalendarPage',
-        components: [Card]
+        name: 'CalendarPage',
+        components: [Card, CalendarHeader]
     })
     export default class extends Page {
+
 
         totalIU: number = 5;
 
@@ -166,7 +91,6 @@
         lunchFoods: IFood[] = [];
         dinnerFoods: IFood[] = [];
         snackFoods: IFood[] = [];
-
 
         onLoad() {
             this.breakfastFoods.push({
@@ -252,6 +176,10 @@
                 }
             }, 1000);
 
+        }
+
+        updateDate(newDate: number) {
+            this.date = newDate;
         }
 
         onComponentCreated() {
