@@ -1,6 +1,6 @@
 import * as tabris from './tabris-lib'
 
-import {Observable} from "./object-observer";
+import * as WatchJS from "./watch-js";
 
 import * as JsDiff from "./diff";
 import {ScreenCommand, CommandType, ElementResult, Page, Composite} from "./page";
@@ -24,17 +24,8 @@ export function Component(options: { name: string; components?: any[] } = {name:
         let f: any = function (...args) {
             let result = construct(original, args);
             result.components = options.components || [];
-            if (result instanceof Page) {
-                setInterval(() => {
-                    PageManager.queueRender(result);
-                }, 1000);
-            }
-            return result;
-            result = Observable.from(result);
-
-            result.observe((changes: any[]) => {
-                if (changes[0].path[0].indexOf("__") == 0)return;
-                console.log('changes', changes[0].path.join('.'));
+            WatchJS.watch(result, (prop, action, newvalue, oldvalue) => {
+                console.log('changes', prop, action, newvalue, oldvalue);
                 if (result instanceof Page) {
                     PageManager.queueRender(result);
                 } else if (result instanceof Composite) {
@@ -103,20 +94,7 @@ export class PageManager {
                 for (let on in result.ons) {
                     page.componentInstances[widgetId].callbacks[on] = result.ons[on];
                 }
-            } else {
-                /*
-                 for (let attr in result.attributes) {
-                 if (result.attributes[attr] && typeof result.attributes[attr] === 'object') {
-                 if (JSON.stringify(result.attributes[attr],null,'\t')!== JSON.stringify(page.componentInstances[widgetId][attr],null,'\t')) {
-                 debugger;
-                 page.componentInstances[widgetId][attr] = result.attributes[attr];
-                 }
-                 }
-                 }
-                 */
             }
-
-
             let child = page.componentInstances[widgetId].render();
             child.parent = result.parent;
             commands.push(...this.processTree(page, child));
