@@ -63,6 +63,7 @@ export abstract class Composite {
             case "Console":
                 result.commands.push(new ScreenCommand(CommandType.ConsoleLog, {value: attributes["log"]}));
                 break;
+            case 'ActivityIndicator':
             case 'Button':
             case 'Canvas':
             case 'Cell':
@@ -179,10 +180,12 @@ export abstract class Composite {
         for (let i = 0; i < values.length; i++) {
             let val = values[i];
             let result = callback(val);
-            if (!result.iteratorKey) {
-                result.iteratorKey = i.toString();
+            if (result) {
+                if (!result.iteratorKey) {
+                    result.iteratorKey = i.toString();
+                }
+                results.push(result);
             }
-            results.push(result);
         }
         return results;
     }

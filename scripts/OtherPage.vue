@@ -1,6 +1,6 @@
 ﻿<template>
 
-    <Page topLevel="false" id="OtherPage" title="foo">
+    <Page topLevel="false" id="OtherPage" title="fwoo">
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>
         <ActivityIndicator top="prev() 20" centerX="0" :width="48*2" :height="48*2"></ActivityIndicator>

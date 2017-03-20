@@ -1,6 +1,6 @@
 import * as tabris from './tabris-lib'
 
-import * as WatchJS from "./watch-js";
+import {watch} from "./watch-js";
 
 import * as JsDiff from "./diff";
 import {ScreenCommand, CommandType, ElementResult, Page, Composite} from "./page";
@@ -24,7 +24,7 @@ export function Component(options: { name: string; components?: any[] } = {name:
         let f: any = function (...args) {
             let result = construct(original, args);
             result.components = options.components || [];
-            WatchJS.watch(result, (prop, action, newvalue, oldvalue) => {
+            watch(result, (prop, action, newvalue, oldvalue) => {
                 console.log('changes', prop, action, newvalue, oldvalue);
                 if (result instanceof Page) {
                     PageManager.queueRender(result);
@@ -65,7 +65,6 @@ export class PageManager {
                 delete this.renders[page._id];
                 // console.profile('render');
                 // var m = new Date();
-                console.log('draw');
                 this.renderPage(page);
                 // console.log((new Date() - m))
                 // console.profileEnd('render');

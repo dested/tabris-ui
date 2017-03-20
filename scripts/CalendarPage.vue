@@ -37,7 +37,7 @@
 
     @Component({
         name: 'CalendarPage',
-        components: [ CalendarHeader,FoodTabs]
+        components: [CalendarHeader, FoodTabs]
     })
     export default class extends Page {
 
@@ -53,12 +53,12 @@
         onLoad() {
             this.foodItems.push({
                 name: "BREAKFAST", items: [
-                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn1', cals: 12, fat: 93, carbs: 900, protein: 20},
-                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn2', cals: 12, fat: 93, carbs: 900, protein: 20},
-                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn3', cals: 12, fat: 93, carbs: 900, protein: 20},
-                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn4', cals: 12, fat: 93, carbs: 900, protein: 20},
-                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn5', cals: 12, fat: 93, carbs: 900, protein: 20},
-                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn6', cals: 12, fat: 93, carbs: 900, protein: 20},
+                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn1', cals: 12, fat: 93, carbs: 900, protein: 20},
+                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn2', cals: 12, fat: 93, carbs: 900, protein: 20},
+                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn3', cals: 12, fat: 93, carbs: 900, protein: 20},
+                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn4', cals: 12, fat: 93, carbs: 900, protein: 20},
+                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn5', cals: 12, fat: 93, carbs: 900, protein: 20},
+                    {image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn6', cals: 12, fat: 93, carbs: 900, protein: 20},
                 ]
             });
 
@@ -68,12 +68,12 @@
 
             this.totalIU = 120;
             this.currentIU = 0;
-        /*    var ci = setInterval(() => {
+            var ci = setInterval(() => {
                 this.currentIU++;
                 if (this.currentIU == this.totalIU) {
                     clearInterval(ci)
                 }
-            }, 1000);*/
+            }, 200);
 
         }
 
@@ -92,26 +92,21 @@
         updateFoods() {
             this.foodItems[0].items = [];
 
-            this.foodItems[0].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[0].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[0].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-
-
-            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-
-            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-
-            this.foodItems[3].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-            this.foodItems[3].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
-
+            this.foodItems[0].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[0].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[0].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[1].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[2].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[3].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
+            this.foodItems[3].items.push({image: 'http://johnvenaproduce.com/OCM/imageuploads/babycorn.jpg', other: 'it', title: 'corn' + ((Math.random() * 100000) | 0), cals: 12, fat: 93, carbs: 900, protein: 20});
         }
 
         onNavigateTo() {
