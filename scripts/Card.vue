@@ -36,14 +36,16 @@
     })
     export default class extends Composite {
         item: IFood;
-foo:number=0;
+        foo: number = 0;
+
         onLoad() {
         }
 
         onComponentCreated() {
 
         }
-        tapDelete(){
+
+        tapDelete() {
             this.$emit('delete');
         }
 

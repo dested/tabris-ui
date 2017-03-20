@@ -1,4 +1,5 @@
-﻿import CalendarPage from "./CalendarPage.vue";
+﻿import TestPage from "./TestPage.vue";
+import CalendarPage from "./CalendarPage.vue";
 import {PageManager} from "./tabris-ui/pageManager";
 
 declare var process;

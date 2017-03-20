@@ -1,1 +1,1 @@
-export * from './tabris' 
+export * from 'tabris' 
